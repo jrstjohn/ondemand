@@ -18,11 +18,13 @@ class OodAppGroup
   # given an array of apps, group those apps by app category (or the attribute)
   # specified by 'group_by', sorting both groups and apps arrays by title
   def self.groups_for(apps: [], group_by: :category)
-    apps.group_by { |app|
-      app.send(group_by)
-    }.map { |k,v|
-      OodAppGroup.new(title: k, apps: v.sort_by { |a| a.title })
-    }.sort_by { |g| g.title }
+    grouped = apps.group_by { |app|
+                app.send(group_by)
+              }.map { |k,v|
+                OodAppGroup.new(title: k, apps: v.sort_by { |a| a.title })
+              }.sort_by { |g| g.title }
+
+    group_by == :subcategory ? grouped.reverse : grouped
   end
 
   # select a subset of groups by the specified array of titles
